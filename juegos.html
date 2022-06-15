@@ -11,89 +11,139 @@
     </head>
     <body>
 
-        <div class="container">
+        <div class="container" style="width: 40%;">
             <h2>Juego</h2>
-        </div>
-        <form>
-            <div class="row mb-3">
-                <label class="form-label">Nombre: </label>
-                <input id="nombre" name="nombre" >
-            </div>
-            <div class="row mb-3">
-                <label class="form-label">Descripción: </label>
-                <textarea id="descripcion" name="descripcion" >
-                </textarea>
-            </div>
-            <div class="row mb-3">
-                <label class="form-label">Género</label>
-                <select id="genero" name="genero">
-                    <option>Acción</option>
-                    <option>Aventura</option>
-                    <option>Estrategia</option>
-                    <option>Simulación</option>
-                    <option>Plataformas</option>
-                    <option>RPG</option>
-                    <option>Party</option>
-                </select>
-            </div>
-            <div class="row mb-3">
-                <label class="form-label">Plataforma</label>
-                <select id="plataforma" name="plataforma">
-                    <option>XBOX One</option>
-                    <option>XBOX Series X</option>
-                    <option>PlayStation 4</option>
-                    <option>PlayStation 5</option>
-                    <option>Nintendo Switch</option>
-                    <option>Nintendo Wii</option>
-                    <option>PSP</option>
-                </select>
-            </div>
-            <div class="row mb-3">
-                <label class="form-label">Distribuidora</label>
-                <select id="distribuidora" name="distribuidora">
-                    <option>Nintendo</option>
-                    <option>PlayStation</option>
-                    <option>XBOX</option>
-                </select>
-            </div>
-            <div class="row mb-3">
-                <label class="form-label">Imagen URL: </label>
-                <input id="urlImage" name="urlImage" >
-            </div>
-            <div class="row mb-3">
-                <label class="form-label">Precio: </label>
-                <div class="input-group-prepend">
-                    <span class="input-group-text">S/.</span>
+            <form autocomplete="off">
+                <div class="mb-3">
+                    <label class="form-label">Nombre: </label>
+                    <input id="nombre" class="form-control" name="nombre" >
+                    <div id="nombreFeedback"></div>
                 </div>
-                <input name="precio" id="precio" type="text" class="form-control" aria-label="Ingrese monto.">
+                <div class="mb-3">
+                    <label class="form-label">Descripción: </label>
+                    <textarea class="form-control"  id="descripcion" name="descripcion"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Género</label>
+                    <select class="form-select" id="genero" name="genero">
+                        <option style="color: #333333;" value="">- Seleccionar genero -</option>
+                        <option value="1">Acción</option>
+                        <option value="2">Aventura</option>
+                        <option value="3">Estrategia</option>
+                        <option value="4">Simulación</option>
+                        <option value="5">Plataformas</option>
+                        <option value="6">RPG</option>
+                        <option value="7">Party</option>
+                    </select>
+                </div>
+                <div class=" mb-3">
+                    <label class="form-label">Plataforma</label>
+                    <select class="form-select" id="plataforma" name="plataforma">
+                        <option style="color: #333333;" value="">- Seleccionar plataforma -</option>
+                        <option value="1" >XBOX One</option>
+                        <option value="2">XBOX Series X</option>
+                        <option value="3">PlayStation 4</option>
+                        <option value="4">PlayStation 5</option>
+                        <option value="5">Nintendo Switch</option>
+                        <option value="6">Nintendo Wii</option>
+                        <option value="7">PSP</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Distribuidora</label>
+                    <select class="form-select" id="distribuidora" name="distribuidora">
+                        <option style="color: #333333;" value="">- Seleccionar distribuidora -</option>
+                        <option value="1">Nintendo</option>
+                        <option value="2">PlayStation</option>
+                        <option value="3">XBOX</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Imagen URL: </label>
+                    <input class="form-control" id="urlImage" name="urlImage" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Precio: </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">S/.</span>
+                        </div>
+                        <input class="form-control" name="precio" id="precio" type="text" class="form-control" aria-label="Ingrese monto.">
+                    
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                        <a class="btn btn-danger" href="/listajuegos">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Añadir</button>
+                    
+                </div>
+            </form>
+
+            <div class="modal" id="modalError" tabindex="-1">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Error!</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="feedback"></p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ok :(</button>
+                    </div>
+                  </div>
+                </div>
             </div>
-            <div class="row mb-3">
-                <a class="btn btn-danger" href="/listajuegos">Cancelar</a>
-                <button type="submit" class="btn btn-primary">Añadir</button>
-            </div>
-        </form>
+        </div>
+
         <script type="text/javascript">
-
-
-            $("form").submit(function(event){
-                event.preventdefault();
-                let nombre = $("#nombre").val();
-                let descripcion = $("#descripcion").val();
-                let genero = $('#genero option:selected').val();
-                let plataforma = $('#plataforma option:selected').val();
-                let distribuidora = $('#distribuidora option:selected').val();
-                let urlimage = $("#urlImage").val();
-                let precio = $("#precio").val();
-                if(nombre!="" || genero!="" || plataforma !="" || distribuidora!="" || urlImage != "" || precio!="vacio"){
-                    if(nombre.length>=3 && nombre.length<=50 && descripcion.length>=3 && descripcion.length<=250 && 
-                    ){
-                        return
-                    }
+            $("#nombre").keyup(function(){
+                let nombre = $(this).val();
+                let nFeedback = $("#nombreFeedback");
+                $("#nombreFeedback").show();
+                if(nombre.length<3){
+                    $(this).attr("class", "form-control is-invalid");
+                    nFeedback.attr("class", "invalid-feedback");
+                    nFeedback.html("No puede ser menor a 3 caracteres");
+                }else if(nombre.length>50){
+                    $(this).attr("class", "form-control is-invalid");
+                    nFeedback.attr("class", "invalid-feedback");
+                    nFeedback.html("No puede ser mayor a 50 caracteres");
                 }else{
-
+                    $(this).attr("class", "form-control is-valid");
+                    nFeedback.attr("class", "valid-feedback");
+                    nFeedback.html("Verificado");
                 }
-
             })
+            $(document).ready(function() {
+                $("#nombreFeedback").hide();
+                $("form").submit(function(event){
+                    event.preventDefault();
+                    let nombre = $("#nombre").val();
+                    let descripcion = $("#descripcion").val();
+                    let genero = $('#genero option:selected').val();
+                    let plataforma = $('#plataforma option:selected').val();
+                    let distribuidora = $('#distribuidora option:selected').val();
+                    let urlimage = $("#urlImage").val();
+                    let precio = $("#precio").val();
+                    
+                    if(nombre!="" && genero!="" && plataforma !="" && distribuidora!="" && urlImage != "" && precio!=""){
+                        if(nombre.length>=3 && nombre.length<=50 && descripcion.length>=3 && descripcion.length<=250 && urlimage.length>=10 && urlimage.length<=256 && !isNaN(precio) && precio>=50 && precio<=550 && !isNaN(plataforma) && !isNaN(distribuidora) && !isNaN(genero)){
+                            return;
+                        }else{
+                            $("#modalError").modal('show');
+                            $("#feedback").html("Los datos no son correctos");
+                        }
+                    }else{
+                        $("#modalError").modal('show');
+                        $("#feedback").html("No se ingresaron todos los datos");
+                    }
+
+                });
+            });
+           
         </script>
     </body>
 </html>
