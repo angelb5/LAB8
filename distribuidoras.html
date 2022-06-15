@@ -86,7 +86,7 @@
                         </div>
                         <div class="form-group">
                             <a class="btn btn-danger" href="distribuidoras.html">Cancelar</a>
-                            <button type="submit" class="btn btn-primary">Añadir</button>
+                            <button type="submit" id="btnform" class="btn btn-primary">Añadir</button>
                         </div>
                     </form>
                 </div>
@@ -104,17 +104,21 @@
                 </div>
                 <div class="mt-5">
                     <table class="table table-striped" id="lista">
-                        <tr>
-                            <th>#</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Web</th>
-                            <th>Fundación</th>
-                            <th>País</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        <tr id="vacio"><td>No hay distribuidoras agregadas</td></tr>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Web</th>
+                                <th>Fundación</th>
+                                <th>País</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="distbody">
+                            <tr id="vacio"><td>No hay distribuidoras agregadas</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>

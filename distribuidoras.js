@@ -1,11 +1,8 @@
 var distribuidoras = [];
 var editando = false;
 var idEditar = 1;
-var id = 1;
 
 $("#form").submit(function (event){
-
-    document.getElementById("vacio").style.display="none";
 
     event.preventDefault();
     let nombre = $("#nombre").val();
@@ -63,12 +60,7 @@ $("#form").submit(function (event){
 
     if(!errorNombre && !errorDescripcion && !errorFundacion && !errorWeb && !errorPais){
 
-        if(editando){
-            $("#"+id).remove();
-        }
-
         let distribuidora ={
-            id: id,
             nombre: nombre,
             descripcion: descripcion,
             web: web,
@@ -76,18 +68,20 @@ $("#form").submit(function (event){
             pais: pais
         }
 
-        document.getElementById("vacio").style.display="none";
-        $("#alerta").show(500).delay(3000).hide(500);
-        appendtable(distribuidora);
-        distribuidoras.push(distribuidora);
-
-        if(!editando){
-            idEditar++;
-            id=idEditar;
+        if(editando){
+            distribuidoras[idEditar] = distribuidora;
+            editando=false;
+            $("#btnform").html("Añadir");
+            //Juego creado exitosamente
+            $("#alerta").html("Distribuidora editada exitosamente");
+            $("#alerta").show(500).delay(3000).hide(500);
         }else{
-            id=idEditar;
+            distribuidoras.push(distribuidora);
+            //Juego creado exitosamente
+            $("#alerta").html("Distribuidora creada exitosamente");
+            $("#alerta").show(500).delay(3000).hide(500);
         }
-
+        mostrarTabla();
         $('form').trigger("reset");
         $("input").attr("class", "form-control")
         $(".valid-feedback").hide();
@@ -97,30 +91,38 @@ $("#form").submit(function (event){
 })
 
 function eliminar(ide){
-    $("#"+ide).remove();
-    id=idEditar;
+    distribuidoras.splice(ide-1,1);
+    mostrarTabla();
 }
 
 function actualizar(ida){
-    let distribuidoraEditar = distribuidoras.find( e => e.id==ida);
+    editando=true;
+    idEditar=ida-1;
+    $("#btnform").html("Guardar");
+    let distribuidoraEditar = distribuidoras[ida-1];
     $("#nombre").val(distribuidoraEditar.nombre);
     $("#descripcion").val(distribuidoraEditar.descripcion);
     $("#web").val(distribuidoraEditar.web);
     $("#fundacion").val(distribuidoraEditar.fundacion);
     $("#pais").val(distribuidoraEditar.pais);
-    editando=true;
-    id=ida;
 }
 
-function appendtable(distribuidora){
-    $('#lista').append('<tr id="'+distribuidora.id+'">'+
-        '<td>'+distribuidora.id+'</td>'+
+function appendtable(i,distribuidora){
+    $('#lista').append('<tr id="'+i+'">'+
+        '<td>'+i+'</td>'+
         '<td>'+distribuidora.nombre+'</td>'+
         '<td>'+distribuidora.descripcion+'</td>'+
         '<td>'+distribuidora.web+'</td>'+
         '<td>'+distribuidora.fundacion+'</td>'+
         '<td>'+distribuidora.pais+ '</td>'+
-        '<td><a class="btn btn-primary" title="Editar" onclick="actualizar('+distribuidora.id+')"><span class="bi bi-pencil-square"></span></a></td>'+
-        '<td><a class="btn btn-danger" title="Borrar" onclick="eliminar('+distribuidora.id+')"><span class="bi bi-trash"></span></a></td>');
+        '<td><a class="btn btn-primary" title="Editar" onclick="actualizar('+i+')"><span class="bi bi-pencil-square"></span></a></td>'+
+        '<td><a class="btn btn-danger" title="Borrar" onclick="eliminar('+i+')"><span class="bi bi-trash"></span></a></td>');
 
 }
+
+function mostrarTabla(){
+    $("#distbody").empty();
+    for(i=0; i<distribuidoras.length;i++){
+        appendtable(i+1,distribuidoras[i]);
+    }
+   }
