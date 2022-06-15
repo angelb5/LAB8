@@ -52,12 +52,12 @@ $("#form").submit(function (event){
             editando=false;
             $("#btnform").html("Añadir");
             //Juego creado exitosamente
-            $("#alerta").html("Distribuidora editada exitosamente");
+            $("#alerta").html("Plataforma editada exitosamente");
             $("#alerta").show(500).delay(3000).hide(500);
         }else{
             plataformas.push(plataforma);
             //Juego creado exitosamente
-            $("#alerta").html("Distribuidora creada exitosamente");
+            $("#alerta").html("Plataforma creada exitosamente");
             $("#alerta").show(500).delay(3000).hide(500);
         }
         mostrarTabla();
