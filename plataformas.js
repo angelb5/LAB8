@@ -1,67 +1,103 @@
-'use strict'
+var plataformas = [];
+var editando = false;
+var idEditar = 1;
 
-// Variables Importantes
-let form = document.querySelector("form")
-let listaInputs = form.querySelectorAll("input, textarea")
-let btnCancelar = document.getElementById("cancelar-btn")
-let cuerpoTabla = document.getElementsByTagName("tbody")[0]
-    
-// Validación del formulario
-form.addEventListener('submit', event => {
-    event.preventDefault()
+$("#form").submit(function (event){
 
-    if(form.checkValidity()){
-        agregarFila()
+    event.preventDefault();
+    let nombre = $("#nombre").val();
+    let descripcion = $("#descripcion").val();
+    let web = $("#web").val();
+
+    let errorNombre = nombre.length<3 || nombre.length>20;
+    let errorDescripcion = descripcion.length<3 || descripcion.length>512;
+    let validoUrl = /^(ftp|http|https):\/\/[^ "]+$/.test(web);
+    let errorWeb = (web.length<3 || web.length>256) || !validoUrl;
+
+    if (errorNombre) {
+        $("#errorNombre").show(500).delay(3000).hide(500);
+        $("#nombre").addClass("is-invalid");
+        setTimeout(function () {
+            $("#nombre").removeClass('is-invalid');
+        }, 4000);
     }
 
-    form.classList.add('was-validated')
-}, false)
+    if (errorDescripcion) {
+        $("#errorDes").show(500).delay(3000).hide(500);
+        $("#descripcion").addClass("is-invalid");
+        setTimeout(function () {
+            $("#descripcion").removeClass('is-invalid');
+        }, 4000);
+    }
 
-// Cancelar (Limpia los inputs)
-function limpiar(){
-    form.classList.remove('was-validated')
+    if (errorWeb) {
+        $("#errorWeb").show(500).delay(3000).hide(500);
+        $("#web").addClass("is-invalid");
+        setTimeout(function () {
+            $("#web").removeClass('is-invalid');
+        }, 4000);
+    }
 
-    listaInputs.forEach(input => {
-        input.value = ""
-    })
-    listaInputs[0].value = 0
+
+    if(!errorNombre && !errorDescripcion && !errorWeb){
+
+        let plataforma ={
+            nombre: nombre,
+            descripcion: descripcion,
+            web: web,
+        }
+
+        if(editando){
+            plataformas[idEditar] = plataforma;
+            editando=false;
+            $("#btnform").html("Añadir");
+            //Juego creado exitosamente
+            $("#alerta").html("Distribuidora editada exitosamente");
+            $("#alerta").show(500).delay(3000).hide(500);
+        }else{
+            plataformas.push(plataforma);
+            //Juego creado exitosamente
+            $("#alerta").html("Distribuidora creada exitosamente");
+            $("#alerta").show(500).delay(3000).hide(500);
+        }
+        mostrarTabla();
+        $('form').trigger("reset");
+        $("input").attr("class", "form-control")
+        $(".valid-feedback").hide();
+
+    }
+
+})
+
+function eliminar(ide){
+    plataformas.splice(ide-1,1);
+    mostrarTabla();
 }
-btnCancelar.addEventListener("click", limpiar())
 
-// Agrega una fila a la tabla
-function agregarFila(){
-    
-    let fila, id, foto, image, nombre, descripcion, editar, borrar, boton;
+function actualizar(ida){
+    editando=true;
+    idEditar=ida-1;
+    $("#btnform1").html("Guardar");
+    let platEditar = plataformas[ida-1];
+    $("#nombre").val(platEditar.nombre);
+    $("#descripcion").val(platEditar.descripcion);
+    $("#web").val(platEditar.web);
+}
 
-    if(listaInputs[0].value == 0){
-        fila = cuerpoTabla.insertRow()
+function appendtable(i,plataforma){
+    $('#lista').append('<tr id="'+i+'">'+
+        '<td>'+i+'</td>'+
+        '<td>'+plataforma.nombre+'</td>'+
+        '<td>'+plataforma.descripcion+'</td>'+
+        '<td>'+plataforma.web+'</td>'+
+        '<td><a class="btn btn-primary" title="Editar" onclick="actualizar('+i+')"><span class="bi bi-pencil-square"></span></a></td>'+
+        '<td><a class="btn btn-danger" title="Borrar" onclick="eliminar('+i+')"><span class="bi bi-trash"></span></a></td>');
 
-        id = fila.insertCell()
-        id.innerText = cuerpoTabla.rows.length
+}
 
-        foto = fila.insertCell()
-        image = document.createElement("img")
-        image.src = listaInputs[3].value
-        foto.append(image)
-
-        nombre = fila.insertCell()
-        nombre.innerText = listaInputs[1].value
-
-        descripcion = fila.insertCell()
-        descripcion.innerText = listaInputs[2].value
-
-        editar = fila.insertCell()
-        editar.innerHTML = "<a id=" + cuerpoTabla.rows.length + " class='btn btn-primary' title='Borrar' href='#'><span class='bi bi-pencil-square'></span></a>"
-
-        borrar = fila.insertCell()
-        borrar.innerHTML = "<a id=" + cuerpoTabla.rows.length + " class='btn btn-danger' title='Borrar' href='#'><span class='bi bi-trash'></span></a>"
-
-    } else{
-        fila = cuerpoTabla.rows(listaInputs[0].value)
-
-        fila.cells[1] = listaInputs[3].value
-        fila.cells[2] = listaInputs[1].value
-        fila.cells[3] = listaInputs[2].value
+function mostrarTabla(){
+    $("#distbody").empty();
+    for(i=0; i<plataformas.length;i++){
+        appendtable(i+1,plataformas[i]);
     }
-    limpiar()
 }
