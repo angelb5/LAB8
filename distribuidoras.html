@@ -5,91 +5,113 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Distribuidoras</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- Bootstrap Styles-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     </head>
     <body>
 
-        <section>
-            <div class="page-header text-center">
-                <h2 text="Distribuidora"></h2>
+        <section class="mt-5">
+            <div class="container">
+                <div class="page-header text-center">
+                    <h1>Distribuidora</h1>
+                </div>
+                <div class="container-fluid" id="form" method="post" action="distribuidoras.html">
+                    <form class="row g-3">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" class="form-control" id="nombre">
+                            <div class="invalid-feedback" id="errorNombre">El nombre debe contener entre 3 y 50 caracteres</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Descripción</label>
+                            <textarea type="text" class="form-control" id="descripcion"></textarea>
+                            <div class="invalid-feedback" id="errorDes">La descripción debe contener entre 3 y 512 caracteres</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Web</label>
+                            <input type="text" class="form-control" id="web">
+                            <div class="invalid-feedback" id="errorWeb">Debe ser una URL de entre 3 y 198 caracteres</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Fundación</label>
+                            <input type="number" class="form-control" id="fundacion">
+                            <div class="invalid-feedback" id="errorFund">Debe ser un número entre 1800 y 2100</div>
+                        </div>
+                        <div class="form-group">
+                            <label>País</label>
+                            <select class="form-select" id="pais">
+                                <option style="color: #333333;" value="">- Seleccionar genero -</option>
+                                <option>Perú</option>
+                                <option>Ecuador</option>
+                                <option>Brasil</option>
+                                <option>Colombia</option>
+                                <option>Chile</option>
+                                <option>Bolivia</option>
+                                <option>Argentina</option>
+                                <option>México</option>
+                            </select>
+                            <div class="invalid-feedback" id="errorPais">No ha seleccionado un país</div>
+                        </div>
+                        <div class="form-group">
+                            <a class="btn btn-danger" href="distribuidoras.html">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Añadir</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <form onsubmit="validarDistribuidora()">
-                <label>Nombre</label>
-                <input id="nombre">
-                <label>Descripcion</label>
-                <input id="descripcion">
-                <label>Web</label>
-                <input id="web">
-                <label>Fundacion</label>
-                <input id="fundacion">
-                <label>País</label>
-                <select id="pais">
-                    <option>Perú</option>
-                    <option>Ecuador</option>
-                    <option>Brasil</option>
-                    <option>Colombia</option>
-                    <option>Chile</option>
-                    <option>Bolivia</option>
-                    <option>Argentina</option>
-                    <option>México</option>
-                </select>
-            </form>
         </section>
 
-        <section>
-            <div class="page-header text-center">
-                <h1>Lista de Distribuidoras</h1>
-            </div>
-            <div class="container-fluid">
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <section class="mt-5">
+            <div class="container">
+                <div class="page-header text-center">
+                    <h2>Lista de Distribuidoras</h2>
+                </div>
+                <div class="container-fluid" id="alerta" style="display: none;">
                     <i class="bi bi-check-circle-fill"></i>
-                    <span text="${msg}"></span>
+                    <span>Distribuidora creada con éxito</span>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <table class="table table-striped">
-                    <thead>
+                <div class="mt-5">
+                    <table class="table table-striped" id="lista">
                         <tr>
                             <th>#</th>
                             <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Web</th>
                             <th>Fundación</th>
-                            <th>Sede</th>
+                            <th>País</th>
                             <th></th>
                             <th></th>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td text="${info.index + 1}"></td>
-                            <td><a class="link-secondary" href="${distribuidora.web}" text="${distribuidora.nombre}"></a></td>
-                            <td text="${distribuidora.fundacion}"></td>
-                            <td text="${distribuidora.pais.nombre}"></td>
-                            <td><a class="btn btn-primary" title="Editar" href="@{'/distribuidoras/editar?id=' + ${distribuidora.iddistribuidora}}"><span class="bi bi-pencil-square"></span></a></td>
-                            <td><a class="btn btn-danger" title="Borrar" href="@{'/distribuidoras/borrar?id=' + ${distribuidora.iddistribuidora}}"><span class="bi bi-trash"></span></a></td>
-                        </tr>
-                    </tbody>
-                </table>
-
+                        <tr id="vacio"><td>No hay distribuidoras agregadas</td></tr>
+                    </table>
+                </div>
             </div>
         </section>
 
-        <script>
-            function validarDistribuidora() {
-                let nombre = document.getElementById("nombre").value;
-                let descripcion = document.getElementById("descripcion").value;
-                let web = document.getElementById('web').value;
-                let fundacion = document.getElementById('fundacion').value;
-                let pais = document.getElementById('pais').value;
+        <div class="modal" id="modalError" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Error!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="feedback"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ok :(</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                if(nombre!=""){
-                    if(nombre.length>3 && nombre.length<50){
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+        <script src="distribuidoras.js"></script>
 
-                    }
-                }
-
-            }
-
-        </script>
     </body>
 </html>
