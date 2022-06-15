@@ -80,6 +80,7 @@
                         <option value="Nintendo Wii">Nintendo Wii</option>
                         <option value="PSP">PSP</option>
                     </select>
+                    <div id="plataformaFeedback"></div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Distribuidora</label>
@@ -89,6 +90,7 @@
                         <option value="PlayStation">PlayStation</option>
                         <option value="XBOX">XBOX</option>
                     </select>
+                    <div id="distribuidoraFeedback"></div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Imagen URL: </label>
@@ -108,8 +110,7 @@
 
                 <div class="mb-3">
                         <a class="btn btn-danger" href="juegos.html">Cancelar</a>
-                        <button type="submit" class="btn btn-primary">Añadir</button>
-                    
+                        <button type="submit" id="btnform" class="btn btn-primary">Añadir</button>
                 </div>
             </form>
         </div>
@@ -136,27 +137,8 @@
                     <th style="width: 8%"></th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>
-                        <img src="https://media.vandal.net/m/96931/leyendas-pokemon-arceus-202152616392725_1.jpg" class="w-100" alt="Leyendas Pokémon: Arceus">
-                    </td>
-                    <td>
-                        <span>Leyendas Pokémon: Arceus</span>
-                        <span class="mx-2 badge bg-warning text-black">RPG</span>
-                    </td>
-                    <td>Este videojuego de rol, que se desarrollará en Sinnoh, nos llevará a una época pasada de inspiración feudal, apostando por el mundo abierto tridimensional e incorporando nuevas mecánicas de captura y combate que buscan renovar para siempre la saga de cara al futuro.</td>
-                    <td>Nintendo Switch</td>
-                    <td>Nintendo</td>
-                    <td>160.0</td>
-                    <td>
-                        <a class="btn btn-primary" title="Editar" href="#"><span class="bi bi-pencil-square"></span></a>
-                    </td>
-                    <td>
-                        <a class="btn btn-danger" title="Borrar" href="#"><span class="bi bi-trash"></span></a>
-                    </td>
-                </tr>
+                <tbody id="juegostbody">
+                    <tr id="vacio"><td>No hay juegos agregados</td></tr>
                 </tbody>
             </table>
         </div>
@@ -192,8 +174,7 @@
         </div>
 
         <script type="text/javascript">
-            var idreg = 1;
-            var id=idreg;
+            var ideditar;
             var editando = false;
             var juegos=[];
 
@@ -284,7 +265,7 @@
                 }
             })
             // Validación genero
-            $("#genero").keyup(function(){
+            $("#genero").change(function(){
                 let genero = $(this).val();
                 let nFeedback = $("#generoFeedback");
                 $("#generoFeedback").show();
@@ -298,7 +279,36 @@
                     nFeedback.html("Verificado.");
                 }
             })
+            
+            $("#distribuidora").change(function(){
+                let distribuidora = $(this).val();
+                let nFeedback = $("#distribuidoraFeedback");
+                $("#distribuidoraFeedback").show();
+                if(distribuidora === ""){
+                    $(this).attr("class", "form-control is-invalid");
+                    nFeedback.attr("class", "invalid-feedback");
+                    nFeedback.html("Debe seleccionar una distribuidora.");
+                } else{
+                    $(this).attr("class", "form-control is-valid");
+                    nFeedback.attr("class", "valid-feedback");
+                    nFeedback.html("Verificado.");
+                }
+            })
 
+            $("#plataforma").change(function(){
+                let plataforma = $(this).val();
+                let nFeedback = $("#plataformaFeedback");
+                $("#plataformaFeedback").show();
+                if(plataforma === ""){
+                    $(this).attr("class", "form-control is-invalid");
+                    nFeedback.attr("class", "invalid-feedback");
+                    nFeedback.html("Debe seleccionar una plataforma.");
+                } else{
+                    $(this).attr("class", "form-control is-valid");
+                    nFeedback.attr("class", "valid-feedback");
+                    nFeedback.html("Verificado.");
+                }
+            })
 
             $(document).ready(function() {
                 $("#nombreFeedback").hide();
@@ -314,11 +324,7 @@
                     
                     if(nombre!="" && genero!="" && plataforma !="" && distribuidora!="" && urlImage != "" && precio!=""){
                         if(nombre.length>=3 && nombre.length<=50 && descripcion.length>=3 && descripcion.length<=250 && urlimage.length>=10 && urlimage.length<=256 && !isNaN(precio) && precio>=50 && precio<=550 ){
-                            if(editando){
-                                $("#"+id).remove();
-                            }
                             let juego ={
-                                id: id,
                                 nombre: nombre,
                                 descripcion: descripcion,
                                 genero: genero,
@@ -327,20 +333,26 @@
                                 urlimage: urlimage,
                                 precio: precio
                             }
-                            //Juego creado exitosamente
-                            $("#creacionExitosa").show(500).delay(3000).hide(500);
-                            appendtable(juego);
-                            juegos.push(juego);
-
-                            if(!editando){
-                                idreg++; 
-                                id=idreg;
-                            }else{
-                                id=idreg;
+                            
+                            
+                            if(editando){
+                                juegos[ideditar] = juego;
                                 editando=false;
+                                $("#btnform").html("Añadir");
+                                //Juego creado exitosamente
+                                $("#creacionExitosa").html("Juego editado exitosamente");
+                                $("#creacionExitosa").show(500).delay(3000).hide(500);
+                            }else{
+                                juegos.push(juego);
+                                //Juego creado exitosamente
+                                $("#creacionExitosa").html("Juego creado exitosamente");
+                                $("#creacionExitosa").show(500).delay(3000).hide(500);
                             }
+                            mostrarTabla();
                             $('form').trigger("reset");
                             $("input").attr("class", "form-control")
+                            $("textarea").attr("class", "form-control")
+                            $("select").attr("class", "form-select")
                             $(".valid-feedback").hide();
                         }else{
                             $("#modalError").modal('show');
@@ -354,33 +366,40 @@
                 });
             });
            function borrar(idb){
-                $("#"+idb).remove();
-                id=idreg;
+                juegos.splice(idb-1,1);
+                mostrarTabla();
            }
            function editar(ide){
                 editando=true;
-                id=ide;
-                let juegoEditar = juegos.find( e => e.id==ide);
+                ideditar=ide-1;
+                $("#btnform").html("Guardar");
+                let juegoEditar = juegos[ide-1];
                 $("#nombre").val(juegoEditar.nombre);
                 $("#descripcion").val(juegoEditar.descripcion);
-                $("#genero option:selected").val(juegoEditar.genero);
-                $("#distribuidora option:selected").val(juegoEditar.distribuidora);
-                $("#plataforma option:selected").val(juegoEditar.plataforma);
+                $("#genero").val(juegoEditar.genero);
+                $("#distribuidora").val(juegoEditar.distribuidora);
+                $("#plataforma").val(juegoEditar.plataforma);
                 $("#urlImage").val(juegoEditar.urlimage);
                 $("#precio").val(juegoEditar.precio);
            }
-           function appendtable(juego){
-            $('table').append('<tr id="'+juego.id+'">'+
-                                '<td>'+juego.id+'</td>'+
+           function appendtable(i, juego){
+            $('table').append('<tr id="'+i+'">'+
+                                '<td>'+i+'</td>'+
                                 '<td><img src="'+juego.urlimage+'" class="w-100"></td>'+
                                 '<td><span>'+juego.nombre+'</span><span class="mx-2 badge bg-warning text-black">'+juego.genero+'</span></td>'+
                                 '<td>'+juego.descripcion+'</td>'+
                                 '<td>'+juego.plataforma+'</td>'+
                                 '<td>'+juego.distribuidora+'</td>'+
                                 '<td>'+(Math.round(juego.precio * 100) / 100).toFixed(2)+ '</td>'+
-                                '<td><a class="btn btn-primary" title="Editar" onclick="editar('+juego.id+')"><span class="bi bi-pencil-square"></span></a></td>'+
-                                '<td><a class="btn btn-danger" title="Borrar" onclick="borrar('+juego.id+')"><span class="bi bi-trash"></span></a></td>');
+                                '<td><a class="btn btn-primary" title="Editar" onclick="editar('+i+')"><span class="bi bi-pencil-square"></span></a></td>'+
+                                '<td><a class="btn btn-danger" title="Borrar" onclick="borrar('+i+')"><span class="bi bi-trash"></span></a></td>');
                             
+           }
+           function mostrarTabla(){
+            $("#juegostbody").empty();
+            for(i=0; i<juegos.length;i++){
+                appendtable(i+1,juegos[i]);
+            }
            }
         </script>
     </body>
