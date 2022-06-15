@@ -22,26 +22,27 @@
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-app" aria-controls="navbar-app" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse justify-content-star" id="navbar-app">
-                        <ul class="navbar-nav">
-                            
-                            <li class="nav-item">
-                                <a class="nav-link active" href="juegos.html">Juegos</a>
-                            </li>
-                            
-                            <li class="nav-item">
-                                <a class="nav-link" href="plataformas.html">Plataformas</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="distribuidoras.html">Distribuidoras</a>
-                            </li>
-                        </ul>
+                        <div class="collapse navbar-collapse justify-content-star" id="navbar-app">
+                            <ul class="navbar-nav">
+
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="juegos.html">Juegos</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="plataformas.html">Plataformas</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="distribuidoras.html">Distribuidoras</a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </nav>
             </div>
         </div>
         <div class="container py-4" style="width: 50%;">
-            <h2 >Juego</h2>
+            <h2 class="page-header text-center" >Juego</h2>
             <form autocomplete="off">
                 <div class="mb-3">
                     <label class="form-label">Nombre: </label>
@@ -51,6 +52,7 @@
                 <div class="mb-3">
                     <label class="form-label">Descripción: </label>
                     <textarea class="form-control"  id="descripcion" name="descripcion"></textarea>
+                    <div id="descripcionFeedback"></div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Género</label>
@@ -64,6 +66,7 @@
                         <option value="RPG">RPG</option>
                         <option value="Party">Party</option>
                     </select>
+                    <div id="generoFeedback"></div>
                 </div>
                 <div class=" mb-3">
                     <label class="form-label">Plataforma</label>
@@ -89,7 +92,8 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Imagen URL: </label>
-                    <input class="form-control" id="urlImage" name="urlImage" >
+                    <input class="form-control" id="urlImage" name="urlImage" type="url">
+                    <div id="urlImageFeedback"></div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Precio: </label>
@@ -98,7 +102,7 @@
                             <span class="input-group-text">S/.</span>
                         </div>
                         <input class="form-control" name="precio" id="precio" type="text" class="form-control" aria-label="Ingrese monto.">
-                    
+                        <div id="precioFeedback"></div>
                     </div>
                 </div>
 
@@ -110,6 +114,14 @@
             </form>
         </div>
         <div class="container py-4">
+            <div class="page-header text-center">
+                <h2>Lista de Juegos</h2>
+            </div>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" id="creacionExitosa" style="display: none;">
+                Juego creado exitosamente!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -185,6 +197,7 @@
             var editando = false;
             var juegos=[];
 
+            // Validación nombre
             $("#nombre").keyup(function(){
                 let nombre = $(this).val();
                 let nFeedback = $("#nombreFeedback");
@@ -192,17 +205,101 @@
                 if(nombre.length<3){
                     $(this).attr("class", "form-control is-invalid");
                     nFeedback.attr("class", "invalid-feedback");
-                    nFeedback.html("No puede ser menor a 3 caracteres");
+                    nFeedback.html("El nombre no puede ser menor a 3 caracteres.");
                 }else if(nombre.length>50){
                     $(this).attr("class", "form-control is-invalid");
                     nFeedback.attr("class", "invalid-feedback");
-                    nFeedback.html("No puede ser mayor a 50 caracteres");
+                    nFeedback.html("El nombre no puede ser mayor a 50 caracteres.");
                 }else{
                     $(this).attr("class", "form-control is-valid");
                     nFeedback.attr("class", "valid-feedback");
-                    nFeedback.html("Verificado");
+                    nFeedback.html("Verificado.");
                 }
             })
+            // Validación descripción
+            $("#descripcion").keyup(function(){
+                let descripcion = $(this).val();
+                let nFeedback = $("#descripcionFeedback");
+                $("#descripcionFeedback").show();
+                if(descripcion.length<3){
+                    $(this).attr("class", "form-control is-invalid");
+                    nFeedback.attr("class", "invalid-feedback");
+                    nFeedback.html("La descripcion no puede ser menor a 3 caracteres.");
+                }else if(descripcion.length>250){
+                    $(this).attr("class", "form-control is-invalid");
+                    nFeedback.attr("class", "invalid-feedback");
+                    nFeedback.html("La descripcion no puede ser mayor a 250 caracteres.");
+                }else{
+                    $(this).attr("class", "form-control is-valid");
+                    nFeedback.attr("class", "valid-feedback");
+                    nFeedback.html("Verificado.");
+                }
+            })
+            // Validación url
+            $("#urlImage").keyup(function(){
+                let urlImage = $(this).val();
+                let urlValida = /^(ftp|http|https):\/\/[^ "]+$/.test(urlImage);
+                let nFeedback = $("#urlImageFeedback");
+                $("#urlImageFeedback").show();
+                if(urlImage.length<3){
+                    $(this).attr("class", "form-control is-invalid");
+                    nFeedback.attr("class", "invalid-feedback");
+                    nFeedback.html("La URL no puede ser menor a 3 caracteres.");
+                }else if(urlImage.length>198){
+                    $(this).attr("class", "form-control is-invalid");
+                    nFeedback.attr("class", "invalid-feedback");
+                    nFeedback.html("La URL no puede ser mayor a 198 caracteres.");
+                }else if(!urlValida) {
+                    $(this).attr("class", "form-control is-invalid");
+                    nFeedback.attr("class", "invalid-feedback");
+                    nFeedback.html("Debe ingresar una URL.");
+                }else {
+                        $(this).attr("class", "form-control is-valid");
+                        nFeedback.attr("class", "valid-feedback");
+                        nFeedback.html("URL verificada.");
+                }
+            })
+
+            // Validación precio
+            $("#precio").keyup(function() {
+                let precio = $(this).val();
+                let nFeedback = $("#precioFeedback");
+                $("#precioFeedback").show();
+                if (precio < 50) {
+                    $(this).attr("class", "form-control is-invalid");
+                    nFeedback.attr("class", "invalid-feedback");
+                    nFeedback.html("El precio debe ser mayor a S/. 50.00");
+                } else if (precio > 550) {
+                    $(this).attr("class", "form-control is-invalid");
+                    nFeedback.attr("class", "invalid-feedback");
+                    nFeedback.html("El precio debe ser menor a S/. 550.00");
+                }else if (isNaN(precio)){
+                    $(this).attr("class", "form-control is-invalid");
+                    nFeedback.attr("class", "invalid-feedback");
+                    nFeedback.html("Debe ingresar un número.");
+                }else{
+                    $(this).attr("class", "form-control is-valid");
+                    nFeedback.attr("class", "valid-feedback");
+                    nFeedback.html("Verificado.");
+                }
+            })
+            // Validación genero
+            $("#genero").keyup(function(){
+                let genero = $(this).val();
+                let nFeedback = $("#generoFeedback");
+                $("#generoFeedback").show();
+                if(genero === ""){
+                    $(this).attr("class", "form-control is-invalid");
+                    nFeedback.attr("class", "invalid-feedback");
+                    nFeedback.html("Debe seleccionar un género.");
+                } else{
+                    $(this).attr("class", "form-control is-valid");
+                    nFeedback.attr("class", "valid-feedback");
+                    nFeedback.html("Verificado.");
+                }
+            })
+
+
             $(document).ready(function() {
                 $("#nombreFeedback").hide();
                 $("form").submit(function(event){
@@ -230,8 +327,11 @@
                                 urlimage: urlimage,
                                 precio: precio
                             }
+                            //Juego creado exitosamente
+                            $("#creacionExitosa").show(500).delay(3000).hide(500);
                             appendtable(juego);
                             juegos.push(juego);
+
                             if(!editando){
                                 idreg++; 
                                 id=idreg;
