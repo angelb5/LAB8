@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Distribuidoras</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    </head>
+    <body>
+
+        <section>
+            <div class="page-header text-center">
+                <h2 text="Distribuidora"></h2>
+            </div>
+            <form onsubmit="validarDistribuidora()">
+                <label>Nombre</label>
+                <input id="nombre">
+                <label>Descripcion</label>
+                <input id="descripcion">
+                <label>Web</label>
+                <input id="web">
+                <label>Fundacion</label>
+                <input id="fundacion">
+                <label>País</label>
+                <select id="pais">
+                    <option>Perú</option>
+                    <option>Ecuador</option>
+                    <option>Brasil</option>
+                    <option>Colombia</option>
+                    <option>Chile</option>
+                    <option>Bolivia</option>
+                    <option>Argentina</option>
+                    <option>México</option>
+                </select>
+            </form>
+        </section>
+
+        <section>
+            <div class="page-header text-center">
+                <h1>Lista de Distribuidoras</h1>
+            </div>
+            <div class="container-fluid">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span text="${msg}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>Fundación</th>
+                            <th>Sede</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td text="${info.index + 1}"></td>
+                            <td><a class="link-secondary" href="${distribuidora.web}" text="${distribuidora.nombre}"></a></td>
+                            <td text="${distribuidora.fundacion}"></td>
+                            <td text="${distribuidora.pais.nombre}"></td>
+                            <td><a class="btn btn-primary" title="Editar" href="@{'/distribuidoras/editar?id=' + ${distribuidora.iddistribuidora}}"><span class="bi bi-pencil-square"></span></a></td>
+                            <td><a class="btn btn-danger" title="Borrar" href="@{'/distribuidoras/borrar?id=' + ${distribuidora.iddistribuidora}}"><span class="bi bi-trash"></span></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </section>
+
+        <script>
+            function validarDistribuidora() {
+                let nombre = document.getElementById("nombre").value;
+                let descripcion = document.getElementById("descripcion").value;
+                let web = document.getElementById('web').value;
+                let fundacion = document.getElementById('fundacion').value;
+                let pais = document.getElementById('pais').value;
+
+                if(nombre!=""){
+                    if(nombre.length>3 && nombre.length<50){
+
+                    }
+                }
+
+            }
+
+        </script>
+    </body>
+</html>
